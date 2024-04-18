@@ -12,6 +12,7 @@ public:
 	void PreUpdate();
 	void PostUpdate();
 	void ShaderErrorCheck();
+
 private:
 	WinApp* wp = nullptr;
 	HRESULT result = S_OK;
@@ -20,13 +21,22 @@ private:
 	ID3DBlob* errorBlob = nullptr; // エラーオブジェクト
 	ID3D12PipelineState* pipelineState = nullptr; // パイプランステート
 	ID3D12RootSignature* rootSignature;	// ルートシグネチャ
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	D3D12_VERTEX_BUFFER_VIEW vbView{};	// 頂点バッファビューの作成
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	//XMFLOAT3* vertex;
 	XMFLOAT3 vertices[3] =
 	{ { -0.5f,-0.5f,0.f },
 	{ -0.5f,+0.5f,0.f },
 	{ +0.5f,-0.5f,0.f } };
 	//UINT sizeVB;
-
 	ID3D12Resource* vertBuff = nullptr;
+
+public:
+	~DrawGraphs()
+	{
+		delete errorBlob;
+		delete pipelineState;
+		delete rootSignature;
+	};
 };

@@ -28,13 +28,6 @@ public:
 	WinApp(const unsigned int WindowH, const unsigned int WindowW);
 	~WinApp();
 
-	/// <summary>
-	/// ”wŒiF‚Ìİ’è
-	/// </summary>
-	/// <param name="r">red</param>
-	/// <param name="g">green</param>
-	/// <param name="b">blue</param>
-	/// <param name="a">alfa</param>
 	void SetBackColor(int r, int g, int b, float a);
 	void SetWindowSize(const unsigned int winw, const unsigned int winh);
 	int GetWinWidth() { return window_width; };

@@ -11,7 +11,7 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	D3D12_RESOURCE_DESC resDesc{};
 	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * /*_countof(ver)*/(sizeof vertices / sizeof XMFLOAT3));
 	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUへの転送用
-// リソース設定
+	// リソース設定
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Width = sizeVB; // 頂点データ全体のサイズ
 	resDesc.Height = 1;
@@ -109,7 +109,7 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	};
 
 	// グラフィックスパイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+
 	// シェーダーの設定
 	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
 	pipelineDesc.VS.BytecodeLength = vsBlob->GetBufferSize();
@@ -142,9 +142,7 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 
 
 	// ルートシグネチャ
-	ID3D12RootSignature* rootSignature;
 	// ルートシグネチャの設定
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	// ルートシグネチャのシリアライズ
 	ID3DBlob* rootSigBlob = nullptr;
@@ -159,7 +157,6 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	pipelineDesc.pRootSignature = rootSignature;// ルートシグネチャ
 
 	// パイプランステートの生成
-	ID3D12PipelineState* pipelineState = nullptr;
 	result = wp->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }

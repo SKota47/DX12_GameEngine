@@ -1,20 +1,4 @@
-﻿  compilation object save succeeded; see C:\DX12_GameEngine\DX12_GameEngine\x64\Debug\BasicPS.cso
-  compilation object save succeeded; see C:\DX12_GameEngine\DX12_GameEngine\x64\Debug\BasicVS.cso
-  ColorBlend.cpp
-  DrawGraphs.cpp
-C:\DX12_GameEngine\DX12_GameEngine\DrawGraphs.cpp(171,34): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
-C:\DX12_GameEngine\DX12_GameEngine\DrawGraphs.cpp(172,36): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
-  Input.cpp
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-C:\DX12_GameEngine\DX12_GameEngine\Input.cpp(2,1): warning C4005: 'DIRECTINPUT_VERSION': マクロが再定義されました。
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\dinput.h(48,1): message : 'DIRECTINPUT_VERSION' の以前の定義を確認してください
-  main.cpp
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-C:\DX12_GameEngine\DX12_GameEngine\main.cpp(189,39): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
-C:\DX12_GameEngine\DX12_GameEngine\main.cpp(190,41): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
-  WinApp.cpp
-C:\DX12_GameEngine\DX12_GameEngine\WinApp.cpp(13,20): warning C4838: 'const unsigned int' から 'LONG' への変換には縮小変換が必要です
-C:\DX12_GameEngine\DX12_GameEngine\WinApp.cpp(13,29): warning C4838: 'const unsigned int' から 'LONG' への変換には縮小変換が必要です
-C:\DX12_GameEngine\DX12_GameEngine\WinApp.cpp(43,4): warning C4551: 関数呼び出しに引数リストがありません。
-  コードを生成中...
-  DX12_GameEngine.vcxproj -> C:\DX12_GameEngine\DX12_GameEngine\x64\Debug\DX12_GameEngine.exe
+﻿  DrawGraphs.cpp
+C:\Users\m0a2135028\Documents\DX12_GameEngine\DX12_GameEngine\DrawGraphs.cpp(168,34): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
+C:\Users\m0a2135028\Documents\DX12_GameEngine\DX12_GameEngine\DrawGraphs.cpp(169,36): warning C4244: '=': 'int' から 'FLOAT' への変換です。データが失われる可能性があります。
+  DX12_GameEngine.vcxproj -> C:\Users\m0a2135028\Documents\DX12_GameEngine\DX12_GameEngine\x64\Debug\DX12_GameEngine.exe

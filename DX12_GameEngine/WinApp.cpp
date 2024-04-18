@@ -124,6 +124,13 @@ WinApp::~WinApp()
 	UnregisterClass(w.lpszClassName, w.hInstance);
 }
 
+/// <summary>
+/// îwåiêFÇÃê›íË
+/// </summary>
+/// <param name="r">red</param>
+/// <param name="g">green</param>
+/// <param name="b">blue</param>
+/// <param name="a">alfa</param>
 void WinApp::SetBackColor(int r, int g, int b, float a)
 {
 	clearColor[0] = r / 255.f;
