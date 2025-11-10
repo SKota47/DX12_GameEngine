@@ -7,20 +7,20 @@ DrawGraphs::DrawGraphs(WinApp* wp)
 }
 void DrawGraphs::Init(XMFLOAT3& ver)
 {
-	D3D12_HEAP_PROPERTIES heapProp{};   // ƒq[ƒvİ’è
+	D3D12_HEAP_PROPERTIES heapProp{};   // ï¿½qï¿½[ï¿½vï¿½İ’ï¿½
 	D3D12_RESOURCE_DESC resDesc{};
 	UINT sizeVB = static_cast<UINT>(sizeof(XMFLOAT3) * /*_countof(ver)*/(sizeof vertices / sizeof XMFLOAT3));
-	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPU‚Ö‚Ì“]‘——p
-	// ƒŠƒ\[ƒXİ’è
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD; // GPUï¿½Ö‚Ì“]ï¿½ï¿½ï¿½p
+	// ï¿½ï¿½ï¿½\ï¿½[ï¿½Xï¿½İ’ï¿½
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeVB; // ’¸“_ƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY
+	resDesc.Width = sizeVB; // ï¿½ï¿½ï¿½_ï¿½fï¿½[ï¿½^ï¿½Sï¿½Ì‚ÌƒTï¿½Cï¿½Y
 	resDesc.Height = 1;
 	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
 	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	// ’¸“_ƒoƒbƒtƒ@‚Ì¶¬
-		//UPLOAD(Šm•Û‚Í‰Â”\)
+	// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½Ìï¿½ï¿½ï¿½
+		//UPLOAD(ï¿½mï¿½Û‚Í‰Â”\)
 	result = wp->GetDevice()->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -30,121 +30,120 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 		IID_PPV_ARGS(&vertBuff));
 	assert(SUCCEEDED(result));
 
-	// GPUã‚Ìƒoƒbƒtƒ@‚É‘Î‰‚µ‚½‰¼‘zƒƒ‚ƒŠ(ƒƒCƒ“ƒƒ‚ƒŠã)‚ğæ“¾
+	// GPUï¿½ï¿½Ìƒoï¿½bï¿½tï¿½@ï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½æ“¾
 	XMFLOAT3* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 
 	assert(SUCCEEDED(result));
-	// ‘S’¸“_‚É‘Î‚µ‚Ä
+	// ï¿½Sï¿½ï¿½ï¿½_ï¿½É‘Î‚ï¿½ï¿½ï¿½
 	for (int i = 0; i < (sizeof vertices / sizeof XMFLOAT3); i++) {
-		*vertMap = *vertices; // À•W‚ğƒRƒs[
+		vertMap[i] = vertices[i]; // ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½Rï¿½sï¿½[
 	}
-	// Œq‚ª‚è‚ğ‰ğœ
+	// ï¿½qï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vertBuff->Unmap(0, nullptr);
 
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
-	// GPU‰¼‘zƒAƒhƒŒƒX
-	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	// ’¸“_ƒoƒbƒtƒ@‚ÌƒTƒCƒY
-	vbView.SizeInBytes = sizeVB;
-	// ’¸“_1‚Â•ª‚Ìƒf[ƒ^ƒTƒCƒY
-	vbView.StrideInBytes = sizeof(XMFLOAT3);
+	// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½rï¿½ï¿½ï¿½[ï¿½Ìì¬
+	// GPUï¿½ï¿½ï¿½zï¿½Aï¿½hï¿½ï¿½ï¿½X
+	this->vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½ÌƒTï¿½Cï¿½Y
+	this->vbView.SizeInBytes = sizeVB;
+	// ï¿½ï¿½ï¿½_1ï¿½Â•ï¿½ï¿½Ìƒfï¿½[ï¿½^ï¿½Tï¿½Cï¿½Y
+	this->vbView.StrideInBytes = sizeof(XMFLOAT3);
 
-	ID3DBlob* vsBlob = nullptr; // ’¸“_ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ID3DBlob* psBlob = nullptr; // ƒsƒNƒZƒ‹ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ID3DBlob* errorBlob = nullptr; // ƒGƒ‰[ƒIƒuƒWƒFƒNƒg
+	ID3DBlob* vsBlob = nullptr; // ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+	ID3DBlob* psBlob = nullptr; // ï¿½sï¿½Nï¿½Zï¿½ï¿½ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+	ID3DBlob* errorBlob = nullptr; // ï¿½Gï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
 
-	// ’¸“_ƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Ì“Ç‚İï¿½ï¿½İ‚ÆƒRï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½
 	result = D3DCompileFromFile(
-		L"BasicVS.hlsl", // ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+		L"BasicVS.hlsl", // ï¿½Vï¿½Fï¿½[ï¿½_ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½
 		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-		"main", "vs_5_0", // ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ƒfƒoƒbƒO—pİ’è
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½hï¿½Â”\ï¿½É‚ï¿½ï¿½ï¿½
+		"main", "vs_5_0", // ï¿½Gï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Aï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½wï¿½ï¿½
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ï¿½fï¿½oï¿½bï¿½Oï¿½pï¿½İ’ï¿½
 		0,
 		&vsBlob, &errorBlob);
-	// ƒGƒ‰[‚È‚ç
+	// ï¿½Gï¿½ï¿½ï¿½[ï¿½È‚ï¿½
 	if (FAILED(result)) {
-		// errorBlob‚©‚çƒGƒ‰[“à—e‚ğstringŒ^‚ÉƒRƒs[
+		// errorBlobï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½stringï¿½^ï¿½ÉƒRï¿½sï¿½[
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
 		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			error.begin());
 		error += "\n";
-		// ƒGƒ‰[“à—e‚ğo—ÍƒEƒBƒ“ƒhƒE‚É•\¦
+		// ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½oï¿½ÍƒEï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½É•\ï¿½ï¿½
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
-	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚Ì“Ç‚İ‚İ‚ÆƒRƒ“ƒpƒCƒ‹
+	// ï¿½sï¿½Nï¿½Zï¿½ï¿½ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Ì“Ç‚İï¿½ï¿½İ‚ÆƒRï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½
 	result = D3DCompileFromFile(
-		L"BasicPS.hlsl", // ƒVƒF[ƒ_ƒtƒ@ƒCƒ‹–¼
+		L"BasicPS.hlsl", // ï¿½Vï¿½Fï¿½[ï¿½_ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½
 		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ƒCƒ“ƒNƒ‹[ƒh‰Â”\‚É‚·‚é
-		"main", "ps_5_0", // ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg–¼AƒVƒF[ƒ_[ƒ‚ƒfƒ‹w’è
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ƒfƒoƒbƒO—pİ’è
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½hï¿½Â”\ï¿½É‚ï¿½ï¿½ï¿½
+		"main", "ps_5_0", // ï¿½Gï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Aï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½wï¿½ï¿½
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // ï¿½fï¿½oï¿½bï¿½Oï¿½pï¿½İ’ï¿½
 		0,
 		&psBlob, &errorBlob);
-	// ƒGƒ‰[‚È‚ç
+	// ï¿½Gï¿½ï¿½ï¿½[ï¿½È‚ï¿½
 	if (FAILED(result)) {
-		// errorBlob‚©‚çƒGƒ‰[“à—e‚ğstringŒ^‚ÉƒRƒs[
+		// errorBlobï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½stringï¿½^ï¿½ÉƒRï¿½sï¿½[
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
 		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			error.begin());
 		error += "\n";
-		// ƒGƒ‰[“à—e‚ğo—ÍƒEƒBƒ“ƒhƒE‚É•\¦
+		// ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½oï¿½ÍƒEï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½É•\ï¿½ï¿½
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
-	// ’¸“_ƒŒƒCƒAƒEƒg
+	// ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½Cï¿½Aï¿½Eï¿½g
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	{
 	"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
 	D3D12_APPEND_ALIGNED_ELEMENT,
 	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
-	}, // (1s‚Å‘‚¢‚½‚Ù‚¤‚ªŒ©‚â‚·‚¢)
+	}, // (1ï¿½sï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â‚·ï¿½ï¿½)
 	};
 
-	// ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“İ’è
+	// ï¿½Oï¿½ï¿½ï¿½tï¿½Bï¿½bï¿½Nï¿½Xï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½İ’ï¿½
 
-	// ƒVƒF[ƒ_[‚Ìİ’è
+	// ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½Ìİ’ï¿½
 	pipelineDesc.VS.pShaderBytecode = vsBlob->GetBufferPointer();
 	pipelineDesc.VS.BytecodeLength = vsBlob->GetBufferSize();
 	pipelineDesc.PS.pShaderBytecode = psBlob->GetBufferPointer();
 	pipelineDesc.PS.BytecodeLength = psBlob->GetBufferSize();
 
-	// ƒTƒ“ƒvƒ‹ƒ}ƒXƒN‚Ìİ’è
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // •W€İ’è
+	// ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½}ï¿½Xï¿½Nï¿½Ìİ’ï¿½
+	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // ï¿½Wï¿½ï¿½ï¿½İ’ï¿½
 
-	// ƒ‰ƒXƒ^ƒ‰ƒCƒU‚Ìİ’è
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // ƒJƒŠƒ“ƒO‚µ‚È‚¢
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ƒ|ƒŠƒSƒ““à“h‚è‚Â‚Ô‚µ
-	pipelineDesc.RasterizerState.DepthClipEnable = true; // [“xƒNƒŠƒbƒsƒ“ƒO‚ğ—LŒø‚É
+	// ï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Cï¿½Uï¿½Ìİ’ï¿½
+	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½È‚ï¿½
+	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ï¿½|ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½hï¿½ï¿½Â‚Ô‚ï¿½
+	pipelineDesc.RasterizerState.DepthClipEnable = true; // ï¿½[ï¿½xï¿½Nï¿½ï¿½ï¿½bï¿½sï¿½ï¿½ï¿½Oï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½
 
-	// ƒuƒŒƒ“ƒhƒXƒe[ƒg
+	// ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½hï¿½Xï¿½eï¿½[ï¿½g
 	pipelineDesc.BlendState.RenderTarget[0].RenderTargetWriteMask
-		= D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA‘S‚Ä‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğ•`‰æ
+		= D3D12_COLOR_WRITE_ENABLE_ALL; // RBGAï¿½Sï¿½Ä‚Ìƒ`ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½
 
-	// ’¸“_ƒŒƒCƒAƒEƒg‚Ìİ’è
+	// ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½Cï¿½Aï¿½Eï¿½gï¿½Ìİ’ï¿½
 	pipelineDesc.InputLayout.pInputElementDescs = inputLayout;
 	pipelineDesc.InputLayout.NumElements = _countof(inputLayout);
 
-	// }Œ`‚ÌŒ`óİ’è
+	// ï¿½}ï¿½`ï¿½ÌŒ`ï¿½ï¿½İ’ï¿½
 	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	// ‚»‚Ì‘¼‚Ìİ’è
-	pipelineDesc.NumRenderTargets = 1; // •`‰æ‘ÎÛ‚Í1‚Â
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255w’è‚ÌRGBA
-	pipelineDesc.SampleDesc.Count = 1; // 1ƒsƒNƒZƒ‹‚É‚Â‚«1‰ñƒTƒ“ƒvƒŠƒ“ƒO
+	// ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Ìİ’ï¿½
+	pipelineDesc.NumRenderTargets = 1; // ï¿½`ï¿½ï¿½ÎÛ‚ï¿½1ï¿½ï¿½
+	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255ï¿½wï¿½ï¿½ï¿½RGBA
+	pipelineDesc.SampleDesc.Count = 1; // 1ï¿½sï¿½Nï¿½Zï¿½ï¿½ï¿½É‚Â‚ï¿½1ï¿½ï¿½Tï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½O
 
 
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’è
+	// ï¿½ï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½
+	// ï¿½ï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½ï¿½Ìİ’ï¿½
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ÌƒVƒŠƒAƒ‰ƒCƒY
+	// ï¿½ï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½ï¿½ÌƒVï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Cï¿½Y
 	ID3DBlob* rootSigBlob = nullptr;
 	result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
 		&rootSigBlob, &errorBlob);
@@ -153,17 +152,17 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 		IID_PPV_ARGS(&rootSignature));
 	assert(SUCCEEDED(result));
 	rootSigBlob->Release();
-	// ƒpƒCƒvƒ‰ƒCƒ“‚Éƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚ğƒZƒbƒg
-	pipelineDesc.pRootSignature = rootSignature;// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	// ï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Éƒï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g
+	pipelineDesc.pRootSignature = rootSignature;// ï¿½ï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½
 
-	// ƒpƒCƒvƒ‰ƒ“ƒXƒe[ƒg‚Ì¶¬
+	// ï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½gï¿½Ìï¿½ï¿½ï¿½
 	result = wp->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
 }
 
 void DrawGraphs::Update()
 {
-	// ƒrƒ…[ƒ|[ƒgİ’èƒRƒ}ƒ“ƒh
+	// ï¿½rï¿½ï¿½ï¿½[ï¿½|ï¿½[ï¿½gï¿½İ’ï¿½Rï¿½}ï¿½ï¿½ï¿½h
 	D3D12_VIEWPORT viewport{};
 	viewport.Width = wp->GetWinWidth();
 	viewport.Height = wp->GetWinHeight();
@@ -171,33 +170,33 @@ void DrawGraphs::Update()
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
-	// ƒrƒ…[ƒ|[ƒgİ’èƒRƒ}ƒ“ƒh‚ğAƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÉÏ‚Ş
+	// ï¿½rï¿½ï¿½ï¿½[ï¿½|ï¿½[ï¿½gï¿½İ’ï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Aï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½ÉÏ‚ï¿½
 	wp->cmdList_->RSSetViewports(1, &viewport);
 
-	// ƒVƒU[‹éŒ`
+	// ï¿½Vï¿½Uï¿½[ï¿½ï¿½`
 	D3D12_RECT scissorRect{};
-	scissorRect.left = 0; // Ø‚è”²‚«À•W¶
-	scissorRect.right = scissorRect.left + wp->GetWinWidth(); // Ø‚è”²‚«À•W‰E
-	scissorRect.top = 0; // Ø‚è”²‚«À•Wã
-	scissorRect.bottom = scissorRect.top + wp->GetWinHeight(); // Ø‚è”²‚«À•W‰º
-	// ƒVƒU[‹éŒ`İ’èƒRƒ}ƒ“ƒh‚ğAƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÉÏ‚Ş
+	scissorRect.left = 0; // ï¿½Ø‚è”²ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½
+	scissorRect.right = scissorRect.left + wp->GetWinWidth(); // ï¿½Ø‚è”²ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½E
+	scissorRect.top = 0; // ï¿½Ø‚è”²ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½
+	scissorRect.bottom = scissorRect.top + wp->GetWinHeight(); // ï¿½Ø‚è”²ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½
+	// ï¿½Vï¿½Uï¿½[ï¿½ï¿½`ï¿½İ’ï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Aï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½ÉÏ‚ï¿½
 	wp->cmdList_->RSSetScissorRects(1, &scissorRect);
 
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒg‚Æƒ‹[ƒgƒVƒOƒlƒ`ƒƒ‚Ìİ’èƒRƒ}ƒ“ƒh
+	// ï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½gï¿½Æƒï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½ï¿½Ìİ’ï¿½Rï¿½}ï¿½ï¿½ï¿½h
 	wp->cmdList_->SetPipelineState(pipelineState);
 	wp->cmdList_->SetGraphicsRootSignature(rootSignature);
 
-	// ƒvƒŠƒ~ƒeƒBƒuŒ`ó‚Ìİ’èƒRƒ}ƒ“ƒh
-	wp->cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // OŠpŒ`ƒŠƒXƒg
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìİ’èƒRƒ}ƒ“ƒh
+	// ï¿½vï¿½ï¿½ï¿½~ï¿½eï¿½Bï¿½uï¿½`ï¿½ï¿½Ìİ’ï¿½Rï¿½}ï¿½ï¿½ï¿½h
+	wp->cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // ï¿½Oï¿½pï¿½`ï¿½ï¿½ï¿½Xï¿½g
+	// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½rï¿½ï¿½ï¿½[ï¿½Ìİ’ï¿½Rï¿½}ï¿½ï¿½ï¿½h
 	wp->cmdList_->IASetVertexBuffers(0, 1, &vbView);
-	// •`‰æƒRƒ}ƒ“ƒh
-	wp->cmdList_->DrawInstanced((sizeof vertices / sizeof XMFLOAT3), 1, 0, 0); // ‘S‚Ä‚Ì’¸“_‚ğg‚Á‚Ä•`‰æ
+	// ï¿½`ï¿½ï¿½Rï¿½}ï¿½ï¿½ï¿½h
+	wp->cmdList_->DrawInstanced((sizeof vertices / sizeof XMFLOAT3), 1, 0, 0); // ï¿½Sï¿½Ä‚Ì’ï¿½ï¿½_ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ä•`ï¿½ï¿½
 	if (PeekMessage(&wp->msg, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&wp->msg);
 		DispatchMessage(&wp->msg);
 	}
-	//// ƒrƒ…[ƒ|[ƒgİ’èƒRƒ}ƒ“ƒh
+	//// ï¿½rï¿½ï¿½ï¿½[ï¿½|ï¿½[ï¿½gï¿½İ’ï¿½Rï¿½}ï¿½ï¿½ï¿½h
 	//D3D12_VIEWPORT viewport{};
 	//viewport.Width = wp->GetWinWidth();
 	//viewport.Height = wp->GetWinHeight();
@@ -205,7 +204,7 @@ void DrawGraphs::Update()
 	//viewport.TopLeftY = 0;
 	//viewport.MinDepth = 0.0f;
 	//viewport.MaxDepth = 1.0f;
-	//// ƒrƒ…[ƒ|[ƒgİ’èƒRƒ}ƒ“ƒh‚ğAƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÉÏ‚Ş
+	//// ï¿½rï¿½ï¿½ï¿½[ï¿½|ï¿½[ï¿½gï¿½İ’ï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Aï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½ÉÏ‚ï¿½
 	//wp->cmdList_->RSSetViewports(1, &viewport);
 
 	//draw->Update();
@@ -213,16 +212,16 @@ void DrawGraphs::Update()
 
 void DrawGraphs::ShaderErrorCheck()
 {
-	// ƒGƒ‰[‚È‚ç
+	// ï¿½Gï¿½ï¿½ï¿½[ï¿½È‚ï¿½
 	if (FAILED(result)) {
-		// errorBlob‚©‚çƒGƒ‰[“à—e‚ğstringŒ^‚ÉƒRƒs[
+		// errorBlobï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½stringï¿½^ï¿½ÉƒRï¿½sï¿½[
 		std::string error;
 		error.resize(errorBlob->GetBufferSize());
 		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			error.begin());
 		error += "\n";
-		// ƒGƒ‰[“à—e‚ğo—ÍƒEƒBƒ“ƒhƒE‚É•\¦
+		// ï¿½Gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½oï¿½ÍƒEï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½É•\ï¿½ï¿½
 		OutputDebugStringA(error.c_str());
 		assert(0);
 	}
