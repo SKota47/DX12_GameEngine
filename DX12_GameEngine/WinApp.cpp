@@ -3,7 +3,7 @@
 WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 {
 	HINSTANCE hInst = GetModuleHandle(nullptr);
-	//ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX¶¬•“o˜^
+	//ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½^
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.lpfnWndProc = (WNDPROC)WindowProcedure;
 	w.lpszClassName = _T("DirectXTest");
@@ -12,9 +12,9 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 
 	RECT wrc = { 0,0, WindowW, WindowH };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
-	//ƒEƒBƒ“ƒhƒEƒIƒuƒWƒFƒNƒg‚Ì¶¬
+	//ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½
 	hwnd = CreateWindow(w.lpszClassName,
-		_T("DX12ƒeƒXƒg"),
+		_T("DX12ï¿½eï¿½Xï¿½g"),
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
@@ -26,11 +26,11 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 		nullptr);
 
 #ifdef _DEBUG
-	//ƒfƒoƒbƒOƒŒƒCƒ„[‚ğƒIƒ“‚É
+	//ï¿½fï¿½oï¿½bï¿½Oï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½
 	//EnableDebugLayer();
 #endif
-	//DirectX12‰Šú‰»
-	//ƒtƒB[ƒ`ƒƒƒŒƒxƒ‹—ñ‹“
+	//DirectX12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ï¿½tï¿½Bï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½
 	D3D_FEATURE_LEVEL levels[] = {
 		D3D_FEATURE_LEVEL_12_1,
 		D3D_FEATURE_LEVEL_12_0,
@@ -40,7 +40,7 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 	HRESULT result = S_OK;
 	if (FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&dxgiFactory_)))) {
 		if (FAILED(CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory_)))) {
-			exit;
+			return;
 		}
 	}
 	vector <IDXGIAdapter*> adapters;
@@ -57,8 +57,15 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 			break;
 		}
 	}
+	
+	// Release adapters that are not selected
+	for (auto adpt : adapters) {
+		if (adpt != tmpAdapter) {
+			adpt->Release();
+		}
+	}
 
-	//Direct3DƒfƒoƒCƒX‚Ì‰Šú‰»
+	//Direct3Dï¿½fï¿½oï¿½Cï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
 	D3D_FEATURE_LEVEL featureLevel;
 	for (auto l : levels) {
 		if (D3D12CreateDevice(tmpAdapter, l, IID_PPV_ARGS(&dev_)) == S_OK) {
@@ -71,11 +78,11 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 	result = dev_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, cmdAllocator_, nullptr, IID_PPV_ARGS(&cmdList_));
 	//_cmdList->Close();
 	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = {};
-	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;//ƒ^ƒCƒ€ƒAƒEƒg‚È‚µ
+	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;//ï¿½^ï¿½Cï¿½ï¿½ï¿½Aï¿½Eï¿½gï¿½È‚ï¿½
 	cmdQueueDesc.NodeMask = 0;
-	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;//ƒvƒ‰ƒCƒIƒŠƒeƒB“Á‚Éw’è‚È‚µ
-	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;//‚±‚±‚ÍƒRƒ}ƒ“ƒhƒŠƒXƒg‚Æ‡‚í‚¹‚Ä‚­‚¾‚³‚¢
-	result = dev_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue_));//ƒRƒ}ƒ“ƒhƒLƒ…[¶¬
+	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;//ï¿½vï¿½ï¿½ï¿½Cï¿½Iï¿½ï¿½ï¿½eï¿½Bï¿½ï¿½ï¿½Éwï¿½ï¿½È‚ï¿½
+	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;//ï¿½ï¿½ï¿½ï¿½ï¿½ÍƒRï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½Æï¿½ï¿½í‚¹ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	result = dev_->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&cmdQueue_));//ï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½Lï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
 
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
 	swapchainDesc.Width = window_width;
@@ -99,10 +106,10 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 		(IDXGISwapChain1**)&swapchain_);
 
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;//ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgƒrƒ…[‚È‚Ì‚Å“–‘RRTV
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;//ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½[ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½rï¿½ï¿½ï¿½[ï¿½È‚Ì‚Å“ï¿½ï¿½RRTV
 	heapDesc.NodeMask = 0;
-	heapDesc.NumDescriptors = 2;//•\— ‚Ì‚Q‚Â
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;//“Á‚Éw’è‚È‚µ
+	heapDesc.NumDescriptors = 2;//ï¿½\ï¿½ï¿½ï¿½Ì‚Qï¿½ï¿½
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;//ï¿½ï¿½ï¿½Éwï¿½ï¿½È‚ï¿½
 
 	result = dev_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeaps));
 	result = swapchain_->GetDesc(&swcDesc);
@@ -115,17 +122,30 @@ WinApp::WinApp(const unsigned int WindowH, const unsigned int WindowW)
 
 	result = dev_->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_fence));
 
-	ShowWindow(hwnd, SW_SHOW);//ƒEƒBƒ“ƒhƒE•\¦
+	ShowWindow(hwnd, SW_SHOW);//ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½\ï¿½ï¿½
 }
 
 WinApp::~WinApp()
 {
-	//ƒNƒ‰ƒX“o˜^‰ğœ
+	// Release all DirectX resources
+	if (_fence) _fence->Release();
+	for (auto& backBuffer : _backBuffers) {
+		if (backBuffer) backBuffer->Release();
+	}
+	if (rtvHeaps) rtvHeaps->Release();
+	if (swapchain_) swapchain_->Release();
+	if (cmdQueue_) cmdQueue_->Release();
+	if (cmdList_) cmdList_->Release();
+	if (cmdAllocator_) cmdAllocator_->Release();
+	if (dev_) dev_->Release();
+	if (dxgiFactory_) dxgiFactory_->Release();
+	
+	//ï¿½Nï¿½ï¿½ï¿½Xï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½
 	UnregisterClass(w.lpszClassName, w.hInstance);
 }
 
 /// <summary>
-/// ”wŒiF‚Ìİ’è
+/// ï¿½wï¿½iï¿½Fï¿½Ìİ’ï¿½
 /// </summary>
 /// <param name="r">red</param>
 /// <param name="g">green</param>
@@ -164,16 +184,16 @@ void WinApp::EnableDebugLayer() {
 }
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	if (msg == WM_DESTROY) {//ƒEƒBƒ“ƒhƒE‚ª”jŠü‚³‚ê‚½‚çŒÄ‚Î‚ê‚Ü‚·
-		PostQuitMessage(0);//OS‚É‘Î‚µ‚Äu‚à‚¤‚±‚ÌƒAƒvƒŠ‚ÍI‚í‚é‚ñ‚âv‚Æ“`‚¦‚é
+	if (msg == WM_DESTROY) {//ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½ï¿½ï¿½jï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½Ä‚Î‚ï¿½Ü‚ï¿½
+		PostQuitMessage(0);//OSï¿½É‘Î‚ï¿½ï¿½Äuï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒAï¿½vï¿½ï¿½ï¿½ÍIï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Æ“`ï¿½ï¿½ï¿½ï¿½
 		return 0;
 	}
-	return DefWindowProc(hwnd, msg, wparam, lparam);//‹K’è‚Ìˆ—‚ğs‚¤
+	return DefWindowProc(hwnd, msg, wparam, lparam);//ï¿½Kï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
 }
 void WinApp::PreUpdate()
 {
-	//DirectXˆ—
-	//ƒoƒbƒNƒoƒbƒtƒ@‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+	//DirectXï¿½ï¿½ï¿½ï¿½
+	//ï¿½oï¿½bï¿½Nï¿½oï¿½bï¿½tï¿½@ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ï¿½ï¿½æ“¾
 	auto bbIdx = swapchain_->GetCurrentBackBufferIndex();
 
 	D3D12_RESOURCE_BARRIER BarrierDesc = {};
@@ -185,13 +205,13 @@ void WinApp::PreUpdate()
 	BarrierDesc.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	cmdList_->ResourceBarrier(1, &BarrierDesc);
 
-	//ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğw’è
+	//ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½[ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½wï¿½ï¿½
 	auto rtvH = rtvHeaps->GetCPUDescriptorHandleForHeapStart();
 	rtvH.ptr += static_cast<ULONG_PTR>(bbIdx * dev_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
 	cmdList_->OMSetRenderTargets(1, &rtvH, false, nullptr);
 
-	//‰æ–ÊƒNƒŠƒA
-	//float clearColor[] = { 0.5f,0.5f,0.5f,1.0f };//‰©F
+	//ï¿½ï¿½ÊƒNï¿½ï¿½ï¿½A
+	//float clearColor[] = { 0.5f,0.5f,0.5f,1.0f };//ï¿½ï¿½ï¿½F
 	cmdList_->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 
 	BarrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -202,17 +222,17 @@ void WinApp::PreUpdate()
 
 void WinApp::PostUpdate()
 {
-	//–½—ß‚ÌƒNƒ[ƒY
+	//ï¿½ï¿½ï¿½ß‚ÌƒNï¿½ï¿½ï¿½[ï¿½Y
 	cmdList_->Close();
 	Execute();
 
-	//ƒtƒŠƒbƒv
+	//ï¿½tï¿½ï¿½ï¿½bï¿½v
 	swapchain_->Present(1, 0);
 }
 
 void WinApp::Execute()
 {
-	//ƒRƒ}ƒ“ƒhƒŠƒXƒg‚ÌÀs
+	//ï¿½Rï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½Ìï¿½ï¿½s
 	ID3D12CommandList* cmdlists[] = { cmdList_ };
 	cmdQueue_->ExecuteCommandLists(1, cmdlists);
 	cmdQueue_->Signal(_fence, ++_fenceVal);
@@ -223,6 +243,6 @@ void WinApp::Execute()
 		WaitForSingleObject(event, INFINITE);
 		CloseHandle(event);
 	}
-	cmdAllocator_->Reset();//ƒLƒ…[‚ğƒNƒŠƒA
-	cmdList_->Reset(cmdAllocator_, nullptr);//Ä‚ÑƒRƒ}ƒ“ƒhƒŠƒXƒg‚ğ‚½‚ß‚é€”õ
+	cmdAllocator_->Reset();//ï¿½Lï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½A
+	cmdList_->Reset(cmdAllocator_, nullptr);//ï¿½Ä‚ÑƒRï¿½}ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ß‚é€ï¿½ï¿½
 }

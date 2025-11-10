@@ -16,13 +16,13 @@ public:
 private:
 	WinApp* wp = nullptr;
 	HRESULT result = S_OK;
-	//ID3DBlob* vsBlob = nullptr; // ’¸“_ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	//ID3DBlob* psBlob = nullptr; // ƒsƒNƒZƒ‹ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg
-	ID3DBlob* errorBlob = nullptr; // ƒGƒ‰[ƒIƒuƒWƒFƒNƒg
-	ID3D12PipelineState* pipelineState = nullptr; // ƒpƒCƒvƒ‰ƒ“ƒXƒe[ƒg
-	ID3D12RootSignature* rootSignature;	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
+	//ID3DBlob* vsBlob = nullptr; // ï¿½ï¿½ï¿½_ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+	//ID3DBlob* psBlob = nullptr; // ï¿½sï¿½Nï¿½Zï¿½ï¿½ï¿½Vï¿½Fï¿½[ï¿½_ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+	ID3DBlob* errorBlob = nullptr; // ï¿½Gï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+	ID3D12PipelineState* pipelineState = nullptr; // ï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½g
+	ID3D12RootSignature* rootSignature = nullptr;	// ï¿½ï¿½ï¿½[ï¿½gï¿½Vï¿½Oï¿½lï¿½`ï¿½ï¿½
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
-	D3D12_VERTEX_BUFFER_VIEW vbView{};	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[‚Ìì¬
+	D3D12_VERTEX_BUFFER_VIEW vbView{};	// ï¿½ï¿½ï¿½_ï¿½oï¿½bï¿½tï¿½@ï¿½rï¿½ï¿½ï¿½[ï¿½Ìì¬
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
 	//XMFLOAT3* vertex;
 	XMFLOAT3 vertices[3] =
@@ -35,8 +35,9 @@ private:
 public:
 	~DrawGraphs()
 	{
-		delete errorBlob;
-		delete pipelineState;
-		delete rootSignature;
+		if (errorBlob) errorBlob->Release();
+		if (pipelineState) pipelineState->Release();
+		if (rootSignature) rootSignature->Release();
+		if (vertBuff) vertBuff->Release();
 	};
 };

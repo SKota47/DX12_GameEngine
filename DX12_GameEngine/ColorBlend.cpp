@@ -4,9 +4,12 @@ void Color::Add()
 {
 }
 
-void Color::operator+(const BaseColor code)
+Color Color::operator+(const BaseColor& code) const
 {
-	this->code.red += code.red;
-	this->code.blue += code.blue;
-	this->code.green += code.green;
+	Color result;
+	result.code.red = this->code.red + code.red;
+	result.code.blue = this->code.blue + code.blue;
+	result.code.green = this->code.green + code.green;
+	result.code.alfa = this->code.alfa + code.alfa;
+	return result;
 }
