@@ -67,19 +67,14 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	if (FAILED(result)) {
 		// errorBlob����G���[���e��string�^�ɃR�s�[
 		std::string error;
-		if (errorBlob) {
-			error.resize(errorBlob->GetBufferSize());
-			std::copy_n((char*)errorBlob->GetBufferPointer(),
-				errorBlob->GetBufferSize(),
-				error.begin());
-			error += "\n";
-			// �G���[���e���o�̓E�B���h�E�ɕ\��
-			OutputDebugStringA(error.c_str());
-			errorBlob->Release();
-		}
-		else {
-			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
-		}
+		error.resize(errorBlob->GetBufferSize());
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			error.begin());
+		error += "\n";
+		// �G���[���e���o�̓E�B���h�E�ɕ\��
+		OutputDebugStringA(error.c_str());
+		if (errorBlob) errorBlob->Release();
 		assert(0);
 	}
 	// Release errorBlob if it was created during successful compilation
@@ -108,7 +103,6 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 			error += "\n";
 			// �G���[���e���o�̓E�B���h�E�ɕ\��
 			OutputDebugStringA(error.c_str());
-			errorBlob->Release();
 		}
 		else {
 			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
@@ -250,11 +244,9 @@ void DrawGraphs::ShaderErrorCheck()
 			error += "\n";
 			// �G���[���e���o�̓E�B���h�E�ɕ\��
 			OutputDebugStringA(error.c_str());
-			errorBlob->Release();
 		}
 		else {
 			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
 		}
-		assert(0);
 	}
 }
