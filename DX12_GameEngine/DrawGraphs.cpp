@@ -67,14 +67,25 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	if (FAILED(result)) {
 		// errorBlob����G���[���e��string�^�ɃR�s�[
 		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// �G���[���e���o�̓E�B���h�E�ɕ\��
-		OutputDebugStringA(error.c_str());
+		if (errorBlob) {
+			error.resize(errorBlob->GetBufferSize());
+			std::copy_n((char*)errorBlob->GetBufferPointer(),
+				errorBlob->GetBufferSize(),
+				error.begin());
+			error += "\n";
+			// �G���[���e���o�̓E�B���h�E�ɕ\��
+			OutputDebugStringA(error.c_str());
+			errorBlob->Release();
+		}
+		else {
+			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
+		}
 		assert(0);
+	}
+	// Release errorBlob if it was created during successful compilation
+	if (errorBlob) {
+		errorBlob->Release();
+		errorBlob = nullptr;
 	}
 	// �s�N�Z���V�F�[�_�̓ǂݍ��݂ƃR���p�C��
 	result = D3DCompileFromFile(
@@ -89,14 +100,25 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	if (FAILED(result)) {
 		// errorBlob����G���[���e��string�^�ɃR�s�[
 		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// �G���[���e���o�̓E�B���h�E�ɕ\��
-		OutputDebugStringA(error.c_str());
+		if (errorBlob) {
+			error.resize(errorBlob->GetBufferSize());
+			std::copy_n((char*)errorBlob->GetBufferPointer(),
+				errorBlob->GetBufferSize(),
+				error.begin());
+			error += "\n";
+			// �G���[���e���o�̓E�B���h�E�ɕ\��
+			OutputDebugStringA(error.c_str());
+			errorBlob->Release();
+		}
+		else {
+			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
+		}
 		assert(0);
+	}
+	// Release errorBlob if it was created during successful compilation
+	if (errorBlob) {
+		errorBlob->Release();
+		errorBlob = nullptr;
 	}
 	// ���_���C�A�E�g
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
@@ -158,6 +180,10 @@ void DrawGraphs::Init(XMFLOAT3& ver)
 	// �p�C�v�����X�e�[�g�̐���
 	result = wp->GetDevice()->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState));
 	assert(SUCCEEDED(result));
+	
+	// Release shader blobs after pipeline state is created
+	if (vsBlob) vsBlob->Release();
+	if (psBlob) psBlob->Release();
 }
 
 void DrawGraphs::Update()
@@ -216,13 +242,19 @@ void DrawGraphs::ShaderErrorCheck()
 	if (FAILED(result)) {
 		// errorBlob����G���[���e��string�^�ɃR�s�[
 		std::string error;
-		error.resize(errorBlob->GetBufferSize());
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			error.begin());
-		error += "\n";
-		// �G���[���e���o�̓E�B���h�E�ɕ\��
-		OutputDebugStringA(error.c_str());
+		if (errorBlob) {
+			error.resize(errorBlob->GetBufferSize());
+			std::copy_n((char*)errorBlob->GetBufferPointer(),
+				errorBlob->GetBufferSize(),
+				error.begin());
+			error += "\n";
+			// �G���[���e���o�̓E�B���h�E�ɕ\��
+			OutputDebugStringA(error.c_str());
+			errorBlob->Release();
+		}
+		else {
+			OutputDebugStringA("Shader compilation failed but no error blob was created\n");
+		}
 		assert(0);
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 /*-------
-–¢ŽÀ‘•‚Å‚·
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½
 -------*/
 
 struct BaseColor
@@ -16,7 +16,7 @@ class Color
 {
 public:
 	void Add();
-	void operator+(const BaseColor code);
+	Color operator+(const BaseColor& code) const;
 private:
 	BaseColor code;
 };
